@@ -173,7 +173,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayoutHook = avoidStruts (tiled ||| Mirror tiled ||| Full)
+myLayoutHook = spacingRaw False (Border 2 5 5 5) True (Border 5 5 5 5) True $ avoidStruts (tiled ||| Mirror tiled ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -235,8 +235,6 @@ myLogHook = return ()
 -- per-workspace layout choices.
 myStartupHook :: X()
 myStartupHook = do 
-  spawnOnce "nitrogen --restoe"
-  spawnOnce "compton --vsync opengl"
   setWMName "LG3D"
 
 
@@ -247,7 +245,7 @@ myStartupHook = do
 --
 main :: IO ()
 main = do 
-  xmproc <- spawnPipe "polybar mybar"
+  -- xmproc <- spawnOnce "polybar mybar"
   xmonad $ ewmh defaults
 
 

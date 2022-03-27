@@ -1,0 +1,25 @@
+if status is-interactive
+    # Commands to run in interactive sessions can go here
+end
+
+starship init fish | source
+
+fish_add_path $HOME/.cargo/bin
+fish_add_path /usr/local/go/bin
+fish_add_path $HOME/go/bin
+fish_add_path /home/linuxbrew/.linuxbrew/bin
+
+# alias ls to use exa instead
+set TREE_IGNORE "cache|log|logs|node_modules|vendor"
+
+alias ls='exa --group-directories-first'
+alias la='ls -a'
+alias ll='ls --git -hl'
+alias lt='ls --tree -D -L 2 -I {$TREE_IGNORE}'
+alias ltt='ls --tree -D -L 3 -I {$TREE_IGNORE}'
+alias lttt='ls --tree -D -L 4 -I {$TREE_IGNORE}'
+alias ltttt='ls --tree -D -L 5 -I {$TREE_IGNORE}'
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/richard.wang/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/home/richard.wang/Downloads/google-cloud-sdk/path.fish.inc'; end

@@ -1,4 +1,6 @@
-# Dependencies:
+# dotfiles
+Personal configs for Ubuntu
+## Dependencies:
 * xmonad
   * compton (to be replaced?)
   * nitrogen

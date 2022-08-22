@@ -23,7 +23,6 @@ let-env PROMPT_MULTILINE_INDICATOR = "::: "
 
 # starship
 source ~/.cache/starship/init.nu
-#let-env PROMPT_COMMAND = { starship_prompt }
 
 # Directories to search for scripts when calling source or use
 #
@@ -161,7 +160,7 @@ module completions {
   export extern "git submodule" [
     --quiet
   ]
-  
+
   export extern "git submodule update" [
     path?
     --recursive
@@ -622,9 +621,9 @@ let-env config = {
 }
 
 # Git diff for current branch:
-def gitdbr [] { 
+def gitdbr [] {
     let first_commit = (git log origin/HEAD..HEAD --oneline | tail -1 | cut -d " " -f1)
-    git diff $"($first_commit | str trim)..HEAD" 
+    git diff $"($first_commit | str trim)..HEAD"
 }
 
 # Look through history

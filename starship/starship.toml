@@ -3,7 +3,7 @@
 
 # Use custom format
 format = """
-[┌ ](bold green)$directory$git_branch$git_status
+[┌ ](bold green)❮$shell❯ $directory$git_branch$git_status
 [└──>](bold green) """
 
 # Wait 10 milliseconds for starship to check files under the current directory.
@@ -11,6 +11,8 @@ scan_timeout = 10
 
 # Disable the blank line at the start of the prompt
 add_newline = false
+
+command_timeout = 500
 
 [directory]
 truncation_length = 5
@@ -20,3 +22,23 @@ fish_style_pwd_dir_length = 1
 
 [git_branch]
 symbol = "🌱 "
+
+[git_status]
+ahead = "⇡${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+behind = "⇣${count}"
+conflicted = "=${count}"
+untracked = "+${count}"
+stashed = "$"
+modified = "~${count}"
+staged = "${count}"
+deleted = "-${count}"
+
+[shell]
+format = "[$indicator]($style)"
+fish_indicator = "🐠"
+powershell_indicator = "_"
+unknown_indicator = "mystery shell"
+style = "yellow bold"
+disabled = false
+

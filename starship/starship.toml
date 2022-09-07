@@ -12,7 +12,7 @@ scan_timeout = 10
 # Disable the blank line at the start of the prompt
 add_newline = false
 
-command_timeout = 500
+command_timeout = 1000
 
 [directory]
 truncation_length = 5
@@ -32,6 +32,7 @@ untracked = "+${count}"
 stashed = "$"
 modified = "~${count}"
 staged = "${count}"
+renamed = "»${count}"
 deleted = "-${count}"
 
 [shell]

@@ -3,11 +3,6 @@
 # TERM
 let-env TERM = 'xterm-256color'
 
-# Set PATH
-let-env PATH = ($env.PATH | append "/home/richard.wang/go/bin")
-let-env PATH = ($env.PATH | append "/home/richard.wang/.deno/bin")
-let-env PATH = ($env.PATH | append "/usr/local/go/bin")
-
 # Aliases
 alias ll = ls -l
 
@@ -23,6 +18,7 @@ let-env PROMPT_MULTILINE_INDICATOR = "::: "
 
 # starship
 source ~/.cache/starship/init.nu
+#let-env PROMPT_COMMAND = { starship_prompt }
 
 # Directories to search for scripts when calling source or use
 #
@@ -160,7 +156,7 @@ module completions {
   export extern "git submodule" [
     --quiet
   ]
-
+  
   export extern "git submodule update" [
     path?
     --recursive
@@ -368,7 +364,7 @@ let-env config = {
   edit_mode: emacs # emacs, vi
   max_history_size: 10000 # Session has to be reloaded for this to take effect
   sync_history_on_enter: true # Enable to share the history between multiple sessions, else you have to close the session to persist history to file
-  history_file_format: "plaintext" # "sqlite" or "plaintext"
+  history_file_format: "sqlite" #"plaintext" # "sqlite" or "plaintext"
   shell_integration: true # enables terminal markers and a workaround to arrow keys stop working issue
   disable_table_indexes: false # set to true to remove the index column from tables
   cd_with_abbreviations: false # set to true to allow you to do things like cd s/o/f and nushell expand it to cd some/other/folder
@@ -515,6 +511,51 @@ let-env config = {
             | each { |it| {value: $it.command description: $it.usage} }
         }
       }
+      {
+        # List all unique successful commands
+        name: all_history_menu
+        only_buffer_difference: true
+        marker: "? "
+        type: {
+            layout: list
+            page_size: 10
+        }
+        style: {
+            text: green
+            selected_text: green_reverse
+        }
+        source: { |buffer, position|
+            history
+            | where command =~ $buffer
+            | reverse
+            | where exit_status != 1
+            | each { |it| {value: $it.command } }
+            | uniq
+        }
+    }
+    {
+        # List all unique succesfull commands in current directory
+        name: pwd_history_menu
+        only_buffer_difference: true
+        marker: "? "
+        type: {
+            layout: list
+            page_size: 10
+        }
+        style: {
+            text: green
+            selected_text: green_reverse
+        }
+        source: { |buffer, position|
+            history
+            | where command =~ $buffer
+            | reverse
+            | where exit_status != 1
+            | where cwd == $env.PWD
+            | each { |it| {value: $it.command } }
+            | uniq
+        }
+    }
   ]
   keybindings: [
     {
@@ -617,16 +658,27 @@ let-env config = {
       mode: [emacs, vi_normal, vi_insert]
       event: { send: menu name: commands_with_description }
     }
+        {
+      name: "all history"
+      modifier: control
+      keycode: char_h
+      mode: emacs
+      event: { send: menu name: all_history_menu }
+    }
+    {
+      name: "pwd history"
+      modifier: control
+      keycode: char_p
+      mode: emacs
+      event: { send: menu name: pwd_history_menu }
+    }
   ]
 }
 
 # Git diff for current branch:
-def gitdbr [] {
+def gitdbr [] { 
     let first_commit = (git log origin/HEAD..HEAD --oneline | tail -1 | cut -d " " -f1)
-    git diff $"($first_commit | str trim)..HEAD"
+    git diff $"($first_commit | str trim)..HEAD" 
 }
 
-# Look through history
-def cheat [match: string] {
-    cat ~/.config/nushell/history.txt | rg $match
-}
+

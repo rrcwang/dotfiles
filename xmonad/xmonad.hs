@@ -23,10 +23,15 @@ import           XMonad.Layout.Spacing
 import           XMonad.Actions.CycleWS         ( Direction1D(..)
                                                 , WSType(..)
                                                 , moveTo
-                                                , nextScreen
-                                                , prevScreen
                                                 , shiftTo
                                                 )
+
+-- More screens
+import		 XMonad.Actions.PhysicalScreens ( viewScreen
+						, sendToScreen
+						, onPrevNeighbour
+						, onNextNeighbour
+						)
 
 
 import qualified Data.Map                      as M
@@ -133,9 +138,9 @@ myKeys conf@XConfig { XMonad.modMask = modm } =
 
   -- screens
     -- Switch focus to next monitor
-       , ((modm, xK_bracketleft), nextScreen)
+       , ((modm, xK_bracketleft), onPrevNeighbour def W.view)
     -- Switch focus to prev monitor
-       , ((modm, xK_bracketright), prevScreen)
+       , ((modm, xK_bracketright), onNextNeighbour def W.view)
 
 
   -- xmonadki
@@ -164,11 +169,15 @@ myKeys conf@XConfig { XMonad.modMask = modm } =
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
     --
-       [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-       | (key, sc) <- zip [xK_w, xK_e, xK_r] [0 ..]
-       , (f  , m ) <- [(W.view, 0), (W.shift, shiftMask)]
-       ]
+    -- [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
+    -- | (key, sc) <- zip [xK_w, xK_e, xK_r] [0 ..]
+    -- , (f  , m ) <- [(W.view, 0), (W.shift, shiftMask)]
+    --   ]
 
+	[((modm .|. mask, key), f sc)
+	| (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+	, (f, mask) <- [(viewScreen def, 0), (sendToScreen def, shiftMask)]
+	]
 
 
 ------------------------------------------------------------------------

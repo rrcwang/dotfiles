@@ -1,55 +1,44 @@
 # TERM
-let-env TERM = 'xterm-256color'
+$env.TERM = 'xterm-256color'
 
 # Set PATH
-let-env PATH = ($env.PATH | append "/home/richard.wang/go/bin")
-let-env PATH = ($env.PATH | append "/home/richard.wang/.deno/bin")
+$env.PATH = ($env.PATH | split row (char esep))
+$env.PATH = ($env.PATH | append "/home/richard.wang/go/bin")
+$env.PATH = ($env.PATH | append "/home/richard.wang/.deno/bin")
+$env.PATH = ($env.PATH | append "/home/richard.wang/.go/bin")
 
 # Aliases
 alias ll = ls -l
+alias vi = nvim
+alias vim = nvim
 
 # Prompt
-let-env PROMPT_INDICATOR = ""
-let-env PROMPT_INDICATOR_VI_INSERT = ": "
-let-env PROMPT_INDICATOR_VI_NORMAL = "〉"
-let-env PROMPT_MULTILINE_INDICATOR = "::: "
+$env.PROMPT_INDICATOR = ""
+$env.PROMPT_INDICATOR_VI_INSERT = ": "
+$env.PROMPT_INDICATOR_VI_NORMAL = "〉"
+$env.PROMPT_MULTILINE_INDICATOR = "::: "
+$env.PROMPT_COMMAND_RIGHT = ''
 
-let-env PROMPT_COMMAND = { oh-my-posh prompt print primary --config ~/.config/oh-my-posh/themes/theme.omp.json | str collect }
-let-env PROMPT_COMMAND_RIGHT = ''
+# $env.STARSHIP_SHELL = "nu"
+# $env.STARSHIP_SESSION_KEY = (random chars -l 16)
+# $env.PROMPT_COMMAND = { ^/usr/local/bin/starship prompt --cmd-duration $env.CMD_DURATION_MS }
 
-# let-env STARSHIP_SHELL = "nu"
-# let-env STARSHIP_SESSION_KEY = (random chars -l 16)
-# let-env PROMPT_COMMAND = { ^/usr/local/bin/starship prompt --cmd-duration $env.CMD_DURATION_MS }
-
-# Specifies how environment variables are:
-# - converted from a string to a value on Nushell startup (from_string)
-# - converted from a value back to a string when running external commands (to_string)
-# Note: The conversions happen *after* config.nu is loaded
-let-env ENV_CONVERSIONS = {
-  "PATH": {
-    from_string: { |s| $s | split row (char esep) }
-    to_string: { |v| $v | str collect (char esep) }
-  }
-  "Path": {
-    from_string: { |s| $s | split row (char esep) }
-    to_string: { |v| $v | str collect (char esep) }
-  }
-}
+$env.EDITOR = "nvim"
 
 # Directories to search for scripts when calling source or use
 #
 # By default, <nushell-config-dir>/scripts is added
-let-env NU_LIB_DIRS = [
+$env.NU_LIB_DIRS = [
     ($nu.config-path | path dirname | path join 'scripts')
 ]
 
 # Directories to search for plugin binaries when calling register
 #
 # By default, <nushell-config-dir>/plugins is added
-let-env NU_PLUGIN_DIRS = [
+$env.NU_PLUGIN_DIRS = [
     ($nu.config-path | path dirname | path join 'plugins')
 ]
 
 mkdir ~/.cache/starship
-starship init nu | save ~/.cache/starship/init.nu
+starship init nu | save -f ~/.cache/starship/init.nu
 
